@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>FlowReel - All in One</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              950: '#0e0d15',
+              900: '#14121a',
+              850: '#1a1823',
+              800: '#22202e',
+              700: '#2f2c3f',
+            },
+            lumina: {
+              300: '#e0aaff',
+              400: '#c77dff',
+              500: '#9d4edd',
+              600: '#7b2cbf',
+            },
+            emeraldAccent: '#10b981',
+            roseAccent: '#f43f5e',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: #0e0d15;
+      color: #f1f0f5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass-card {
+      background: rgba(26, 24, 35, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(199, 125, 255, 0.12);
+    }
+    .glass-hud {
+      background: rgba(14, 13, 21, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(199, 125, 255, 0.25);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(199, 125, 255, 0.15);
+    }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen bg-black">
+
+  <!-- Mobil Çerçeve Kapsayıcısı -->
+  <div class="relative w-full max-w-[430px] min-h-screen bg-obsidian-950 flex flex-col justify-between pb-24 shadow-2xl border-x border-obsidian-850">
+    
+    <!-- Üst Başlık & Durum Çubuğu -->
+    <header class="sticky top-0 z-40 px-5 pt-4 pb-3 glass-card border-b border-obsidian-800 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-lumina-600 via-lumina-400 to-lumina-300 flex items-center justify-center shadow-lg shadow-lumina-500/25">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-base font-extrabold tracking-tight text-white leading-none">FlowReel</h1>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-lumina-500/20 text-lumina-300 border border-lumina-400/30">PRO</span>
+          </div>
+          <div class="flex items-center gap-1.5 mt-1">
+            <span class="w-2 h-2 rounded-full bg-emeraldAccent animate-pulse"></span>
+            <span class="text-[11px] font-medium text-emerald-400">Oto-Kaydırma Aktif</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Floating HUD Açma Butonu -->
+        <button onclick="toggleModal('hud-modal')" class="px-2.5 py-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 text-xs font-semibold text-lumina-300 border border-lumina-400/20 flex items-center gap-1.5 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+          </svg>
+          <span>HUD</span>
+        </button>
+        <!-- İzinler Bilgi Butonu -->
+        <button onclick="toggleModal('perm-modal')" class="p-1.5 rounded-lg bg-obsidian-800 text-slate-300 hover:text-white transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- SAYFA İÇERİKLERİ -->
+    <main class="flex-1 px-4 pt-3 overflow-y-auto hide-scrollbar">
+
+      <!-- ================= 1. TAB: FEED (ANA EKRAN) ================= -->
+      <section id="tab-feed" class="tab-content flex flex-col gap-3">
+        <!-- Bildirim Hapı -->
+        <div class="glass-card px-3.5 py-2 rounded-xl flex items-center justify-between border-lumina-400/20">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-emeraldAccent"></div>
+            <span class="text-xs font-semibold text-slate-200">AI Filtreleme Aktif</span>
+          </div>
+          <span class="text-[11px] font-mono font-medium text-lumina-300 bg-lumina-500/10 px-2 py-0.5 rounded-md border border-lumina-400/20">Bugün 42 Reklam Atlandı</span>
+        </div>
+
+        <!-- Video Önizleme Kartı -->
+        <div class="relative w-full aspect-[9/14] rounded-2xl overflow-hidden bg-obsidian-900 border border-obsidian-800 shadow-xl flex flex-col justify-between p-4">
+          <!-- Arka Plan Görseli / Gradyan -->
+          <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 pointer-events-none z-10"></div>
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,#2f2c3f_0%,#0e0d15_100%)] opacity-80"></div>
+          
+          <!-- Üst Durum Rozeti -->
+          <div class="relative z-20 flex justify-between items-start">
+            <div class="flex items-center gap-2 bg-obsidian-950/80 backdrop-blur px-2.5 py-1 rounded-full border border-white/10">
+              <span class="w-1.5 h-1.5 rounded-full bg-lumina-400 animate-ping"></span>
+              <span class="text-[11px] font-medium text-slate-200">Reels Akışı Taranıyor</span>
+            </div>
+            <div class="bg-black/60 backdrop-blur px-2 py-1 rounded-md text-[10px] font-mono text-slate-300">
+              FPS: 60 | 12ms
+            </div>
+          </div>
+
+          <!-- Video Bilgileri ve Aksiyonlar -->
+          <div class="relative z-20 flex flex-col gap-3">
+            <div class="flex items-end justify-between">
+              <div class="max-w-[78%]">
+                <div class="flex items-center gap-2 mb-1.5">
+                  <div class="w-6 h-6 rounded-full bg-lumina-400/30 flex items-center justify-center text-[10px] font-bold text-lumina-300">FT</div>
+                  <span class="text-xs font-semibold text-white">@gelecek.teknoloji</span>
+                  <span class="text-[10px] text-slate-400">• Takip Et</span>
+                </div>
+                <p class="text-xs text-slate-200 line-clamp-2 leading-relaxed">
+                  Yapay zeka modelleri video izleme alışkanlıklarını baştan sona değiştiriyor. Reklamsız akıcı deneyim...
+                </p>
+                <div class="flex gap-1.5 mt-2">
+                  <span class="text-[10px] font-medium text-lumina-300">#yapayzeka</span>
+                  <span class="text-[10px] font-medium text-lumina-300">#otomasyon</span>
+                </div>
+              </div>
+
+              <!-- Yan İkonlar -->
+              <div class="flex flex-col items-center gap-3">
+                <button class="flex flex-col items-center gap-0.5 text-slate-200 hover:text-rose-400 transition">
+                  <div class="w-9 h-9 rounded-full bg-white/10 backdrop-blur flex items-center justify-center">
+                    <svg class="w-4 h-4 fill-rose-500" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                  </div>
+                  <span class="text-[10px] font-semibold">48.2K</span>
+                </button>
+                <button class="flex flex-col items-center gap-0.5 text-slate-200">
+                  <div class="w-9 h-9 rounded-full bg-white/10 backdrop-blur flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                  </div>
+                  <span class="text-[10px] font-semibold">1.4K</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Otomatik Kaydırma İlerleme Çubuğu -->
+            <div class="bg-obsidian-950/90 backdrop-blur p-2.5 rounded-xl border border-white/10 flex flex-col gap-1.5">
+              <div class="flex justify-between items-center text-[11px]">
+                <span class="font-mono text-slate-400" id="video-time">0:18 / 0:28</span>
+                <span class="font-bold text-lumina-300 flex items-center gap-1">
+                  <svg class="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+                  10 sn sonra otomatik kaydırılacak
+                </span>
+              </div>
+              <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-lumina-500 to-lumina-300 h-full rounded-full transition-all duration-300" style="width: 65%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hızlı Kontroller -->
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="alert('Otomasyon duraklatıldı')" class="glass-card py-2.5 px-2 rounded-xl flex flex-col items-center gap-1 hover:border-lumina-400/40 transition">
+            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-[11px] font-semibold text-slate-200">Dondur</span>
+          </button>
+          <button onclick="alert('Hız 1.5x yapıldı')" class="glass-card py-2.5 px-2 rounded-xl flex flex-col items-center gap-1 hover:border-lumina-400/40 transition">
+            <svg class="w-4 h-4 text-lumina-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span class="text-[11px] font-semibold text-slate-200">1.25x Dinamik</span>
+          </button>
+          <button onclick="skipReelAnimation()" class="bg-gradient-to-r from-lumina-600 to-lumina-500 py-2.5 px-2 rounded-xl flex flex-col items-center gap-1 shadow-lg shadow-lumina-600/30 text-white font-semibold transition active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+            <span class="text-[11px]">Şimdi Atla</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 2. TAB: RULES & FILTERS ================= -->
+      <section id="tab-rules" class="tab-content hidden flex flex-col gap-3">
+        <div class="mb-1">
+          <h2 class="text-base font-bold text-white">Akıllı Atlama Kuralları</h2>
+          <p class="text-xs text-slate-400">Hangi içeriklerin otomatik geçileceğini belirleyin</p>
+        </div>
+
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-3">
+          <!-- Kural 1 -->
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div>
+              <div class="text-xs font-bold text-white">Sponsorlu & Reklamları Atla</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Etiket tespit edildiğinde 12ms içinde kaydır</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+          <!-- Kural 2 -->
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div>
+              <div class="text-xs font-bold text-white">%100 Tamamlanınca Kaydır</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Video bitmeden asla sonraki videoya geçmez</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+          <!-- Kural 3 -->
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold text-white">Tekrarlanan Döngüleri Engelle</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Aynı videoyu 2. defa oynatma</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+        </div>
+
+        <!-- Gecikme Zamanlayıcısı -->
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-white">Bitiş Sonrası Tampon Süre</span>
+            <span class="text-xs font-mono text-lumina-300 font-bold" id="delay-val">0.5 sn</span>
+          </div>
+          <input type="range" min="0" max="3" step="0.1" value="0.5" oninput="document.getElementById('delay-val').innerText = this.value + ' sn'" class="w-full accent-lumina-500 cursor-pointer">
+          <p class="text-[10px] text-slate-400">Video sonlandıktan sonra yeni videoya geçmeden önce beklenecek süre.</p>
+        </div>
+
+        <!-- Kara Liste Etiketleri -->
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-2">
+          <span class="text-xs font-bold text-white">Kelime ve Etiket Engelleme</span>
+          <div class="flex flex-wrap gap-1.5 mt-1">
+            <span class="px-2 py-1 bg-obsidian-800 rounded-lg text-[10px] text-slate-300 border border-white/5 flex items-center gap-1">#reklam <span class="cursor-pointer text-slate-400 hover:text-white">&times;</span></span>
+            <span class="px-2 py-1 bg-obsidian-800 rounded-lg text-[10px] text-slate-300 border border-white/5 flex items-center gap-1">#isbirligi <span class="cursor-pointer text-slate-400 hover:text-white">&times;</span></span>
+            <span class="px-2 py-1 bg-obsidian-800 rounded-lg text-[10px] text-slate-300 border border-white/5 flex items-center gap-1">#sponsorlu <span class="cursor-pointer text-slate-400 hover:text-white">&times;</span></span>
+            <button class="px-2 py-1 bg-lumina-500/20 text-lumina-300 rounded-lg text-[10px] font-bold border border-lumina-400/30">+ Ekle</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. TAB: ANALYTICS ================= -->
+      <section id="tab-analytics" class="tab-content hidden flex flex-col gap-3">
+        <div class="mb-1">
+          <h2 class="text-base font-bold text-white">Zaman & Atlama Raporu</h2>
+          <p class="text-xs text-slate-400">FlowReel'in size kazandırdığı verimlilik</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="glass-card p-3 rounded-2xl flex flex-col">
+            <span class="text-[11px] text-slate-400">Kurtarılan Süre</span>
+            <span class="text-xl font-extrabold text-white mt-1">48<span class="text-xs text-lumina-300 font-normal"> dk</span></span>
+            <span class="text-[10px] text-emerald-400 mt-1 font-semibold flex items-center gap-0.5">↑ %32 daha az reklam</span>
+          </div>
+          <div class="glass-card p-3 rounded-2xl flex flex-col">
+            <span class="text-[11px] text-slate-400">Atlanan Reklam</span>
+            <span class="text-xl font-extrabold text-white mt-1">148<span class="text-xs text-slate-400 font-normal"> adet</span></span>
+            <span class="text-[10px] text-lumina-300 mt-1 font-semibold">Ort. 0.08s tepki</span>
+          </div>
+        </div>
+
+        <!-- 24 Saatlik Grafik Şeması -->
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-white">Saatlik Atlama Yoğunluğu</span>
+            <span class="text-[10px] text-slate-400">Son 24 Saat</span>
+          </div>
+          <div class="h-28 w-full flex items-end justify-between gap-1 pt-4">
+            <div class="flex-1 bg-lumina-500/30 hover:bg-lumina-500 rounded-t h-[30%] transition"></div>
+            <div class="flex-1 bg-lumina-500/30 hover:bg-lumina-500 rounded-t h-[45%] transition"></div>
+            <div class="flex-1 bg-lumina-500/40 hover:bg-lumina-500 rounded-t h-[20%] transition"></div>
+            <div class="flex-1 bg-lumina-500/50 hover:bg-lumina-500 rounded-t h-[60%] transition"></div>
+            <div class="flex-1 bg-lumina-500/60 hover:bg-lumina-500 rounded-t h-[80%] transition"></div>
+            <div class="flex-1 bg-lumina-500 rounded-t h-[100%] transition shadow-lg shadow-lumina-500/50"></div>
+            <div class="flex-1 bg-lumina-500/50 hover:bg-lumina-500 rounded-t h-[70%] transition"></div>
+            <div class="flex-1 bg-lumina-500/30 hover:bg-lumina-500 rounded-t h-[40%] transition"></div>
+          </div>
+          <div class="flex justify-between text-[9px] font-mono text-slate-400 mt-1">
+            <span>04:00</span>
+            <span>08:00</span>
+            <span>12:00</span>
+            <span>16:00</span>
+            <span>20:00</span>
+            <span>24:00</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. TAB: SETTINGS ================= -->
+      <section id="tab-settings" class="tab-content hidden flex flex-col gap-3">
+        <div class="mb-1">
+          <h2 class="text-base font-bold text-white">Sistem & Donanım Ayarları</h2>
+          <p class="text-xs text-slate-400">Kişiselleştirme ve arka plan servis tercihleri</p>
+        </div>
+
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-3">
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div>
+              <div class="text-xs font-bold text-white">Ses Tuşlarıyla Kontrol</div>
+              <div class="text-[11px] text-slate-400">Ses açma: Duraklat, Ses kısma: Hemen atla</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+          <div class="flex items-center justify-between pb-3 border-b border-white/5">
+            <div>
+              <div class="text-xs font-bold text-white">Haptik Titreşim Geri Bildirimi</div>
+              <div class="text-[11px] text-slate-400">Her kaydırmada mikro titreşim ver</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs font-bold text-white">OLED Pil Koruma Modu</div>
+              <div class="text-[11px] text-slate-400">Tam siyah piksellerle %28 pil tasarrufu</div>
+            </div>
+            <input type="checkbox" checked class="w-5 h-5 accent-lumina-500 rounded">
+          </div>
+        </div>
+
+        <div class="glass-card p-3.5 rounded-2xl flex flex-col gap-2">
+          <span class="text-xs font-bold text-white">Önbellek & Depolama</span>
+          <div class="flex justify-between items-center text-xs text-slate-300">
+            <span>Kullanılan Önbellek</span>
+            <span class="font-mono text-lumina-300 font-bold">184.2 MB</span>
+          </div>
+          <button onclick="alert('Önbellek başarıyla temizlendi!')" class="mt-2 w-full py-2 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-xs font-semibold text-rose-400 border border-rose-500/20 transition">
+            Önbelleği Temizle
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ALT SABİT MENÜ (NAVBAR) -->
+    <nav class="fixed bottom-0 w-full max-w-[430px] z-40 glass-card border-t border-obsidian-800 px-3 py-2 flex items-center justify-around">
+      <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn flex flex-col items-center gap-1 text-lumina-400 font-bold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="text-[10px]">Akış</span>
+      </button>
+      <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        <span class="text-[10px]">Kurallar</span>
+      </button>
+      <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="text-[10px]">İstatistik</span>
+      </button>
+      <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span class="text-[10px]">Ayarlar</span>
+      </button>
+    </nav>
+
+    <!-- ================= FLOATING HUD MODAL ================= -->
+    <div id="hud-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="glass-hud w-full max-w-[340px] rounded-3xl p-4 flex flex-col gap-3 animate-scaleUp">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emeraldAccent animate-pulse"></span>
+            <span class="text-xs font-bold text-white tracking-wide">FlowReel Canlı HUD</span>
+          </div>
+          <button onclick="toggleModal('hud-modal')" class="text-slate-400 hover:text-white text-sm font-bold">&times;</button>
+        </div>
+        <p class="text-[11px] text-slate-300">
+          Bu kayan panel, Instagram/TikTok üzerinde gezinirken ekranınızın köşesinde yer alır.
+        </p>
+        <div class="flex gap-2">
+          <button onclick="alert('Video manuel atlandı')" class="flex-1 py-2 bg-lumina-500 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1 shadow-md shadow-lumina-500/30">
+            <span>Atla</span> ⏩
+          </button>
+          <button onclick="alert('Durduruldu')" class="flex-1 py-2 bg-obsidian-800 rounded-xl text-xs font-bold text-slate-200 border border-white/10 flex items-center justify-center gap-1">
+            <span>Duraklat</span> ⏸️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= İZİNLER BİLGİ MODALI ================= -->
+    <div id="perm-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="glass-card w-full max-w-[340px] rounded-3xl p-5 flex flex-col gap-3">
+        <h3 class="text-sm font-bold text-white">Gereken Android İzinleri</h3>
+        <ul class="text-xs text-slate-300 space-y-2">
+          <li class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span><b>Erişilebilirlik Hizmeti:</b> Otomatik yukarı kaydırma hareketini uygular.</span>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span><b>Üstte Gösterme İzni:</b> Diğer uygulamaların üzerindeyken kayan HUD butonunu gösterir.</span>
+          </li>
+        </ul>
+        <button onclick="toggleModal('perm-modal')" class="w-full mt-2 py-2 bg-lumina-500 text-white rounded-xl text-xs font-bold">
+          Anladım
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sayfa İçi Etkileşim Scripti -->
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeTab = document.getElementById('tab-' + tabId);
+      if (activeTab) activeTab.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-lumina-400', 'font-bold');
+        btn.classList.add('text-slate-400');
+      });
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-lumina-400', 'font-bold');
+      }
+    }
+
+    function toggleModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) modal.classList.toggle('hidden');
+    }
+
+    function skipReelAnimation() {
+      const timeElem = document.getElementById('video-time');
+      timeElem.innerText = '0:28 / 0:28';
+      setTimeout(() => {
+        timeElem.innerText = '0:01 / 0:34';
+      }, 500);
+    }
+  </script>
+</body>
+</html>
