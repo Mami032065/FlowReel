@@ -1,0 +1,43 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # Telefondan tek tuşla manuel başlatabilmek için
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu İndir
+        uses: actions/checkout@v4
+
+      - name: Node.js Kurulumu
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Java Kurulumu
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Bağımlılıkları Yükle ve Android Projesini Hazırla
+        run: |
+          npm install
+          npx cap add android
+          npx cap sync android
+
+      - name: APK Derle (Gradle)
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: APK Dosyasını Yükle (İndirme Linki Oluştur)
+        uses: actions/upload-artifact@v4
+        with:
+          name: FlowReel-Debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
